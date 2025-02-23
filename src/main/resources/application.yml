@@ -1,0 +1,131 @@
+# 服务器配置
+server:
+  port: 8081 # 服务端口号
+  servlet:
+    context-path: / # 应用根路径
+
+spring:
+  # 数据库连接配置
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver # MySQL驱动
+    url: jdbc:mysql://localhost:3306/ssm_demo?useUnicode=true&characterEncoding=utf8&serverTimezone=GMT%2B8 # 数据库URL
+    username: root # 数据库用户名
+    password: 2002fyq1223 # 数据库密码
+    type: com.alibaba.druid.pool.DruidDataSource # 使用Druid连接池
+    druid:
+      initial-size: 5 # 初始连接数
+      min-idle: 10 # 最小空闲连接
+      max-active: 20 # 最大活动连接
+      max-wait: 60000 # 获取连接等待超时时间
+      time-between-eviction-runs-millis: 60000 # 检测间隔时间
+      min-evictable-idle-time-millis: 300000 # 连接最小生存时间
+      max-evictable-idle-time-millis: 900000 # 连接最大生存时间
+      validation-query: SELECT 1 # 检测连接是否有效的SQL
+      test-while-idle: true # 空闲时检测
+      test-on-borrow: false # 获取连接时检测
+      test-on-return: false # 归还连接时检测
+
+  # Redis配置
+  redis:
+    enabled: true # 启用Redis
+    host: localhost # Redis服务器地址
+    port: 6379 # Redis端口
+    password: # Redis密码
+    database: 0 # 使用的数据库编号
+    timeout: 10000 # 连接超时时间
+    lettuce:
+      pool:
+        max-active: 8 # 连接池最大连接数
+        max-wait: -1 # 连接池最大阻塞等待时间
+        max-idle: 8 # 连接池中最大空闲连接
+        min-idle: 0 # 连接池中最小空闲连接
+
+  # 验证码配置
+  kaptcha:
+    border: "no" # 是否有边框
+    textproducer:
+      font:
+        color: "black" # 字体颜色
+        names: "Arial,Courier,cmr10,宋体,楷体,微软雅黑" # 字体
+        size: 30 # 字体大小
+      char:
+        space: 5 # 字符间距
+        length: 4 # 验证码长度
+        string: "123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ" # 验证码字符集
+    noise:
+      impl: "com.google.code.kaptcha.impl.NoNoise" # 噪点实现类
+    image:
+      width: 116 # 图片宽度
+      height: 36 # 图片高度
+    background:
+      clear:
+        from: "white" # 背景颜色渐变起点
+        to: "white" # 背景颜色渐变终点
+
+  # MVC配置
+  mvc:
+    log-request-details: true # 开启请求日志
+    static-path-pattern: /**
+
+  # Jackson配置
+  jackson:
+    deserialization:
+      FAIL_ON_UNKNOWN_PROPERTIES: false # 忽略未知属性
+    serialization:
+      FAIL_ON_EMPTY_BEANS: false # 允许序列化空对象
+    default-property-inclusion: non_null # 不序列化null值
+
+  # 文件上传配置
+  servlet:
+    multipart:
+      enabled: true # 启用文件上传
+      max-file-size: 10MB # 单个文件大小限制
+      max-request-size: 10MB # 总请求大小限制
+
+  # 定时任务配置
+  task:
+    scheduling:
+      pool:
+        size: 5 # 定时任务线程池大小
+      thread-name-prefix: task- # 线程名称前缀
+
+  web:
+    resources:
+      static-locations:
+        - classpath:/static/
+        - file:src/main/resources/static/
+
+# MyBatis配置
+mybatis:
+  mapper-locations: classpath:mapper/*.xml # mapper文件位置
+  type-aliases-package: web.ssm.entity # 实体类包路径
+  configuration:
+    map-underscore-to-camel-case: true # 开启驼峰命名
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl # SQL日志实现
+
+# 日志配置
+logging:
+  level:
+    root: INFO # 根日志级别
+    web.ssm: DEBUG # 项目日志级别
+    org.springframework.web: DEBUG # Spring Web日志级别
+    org.springframework.http.converter: DEBUG # HTTP转换器日志级别
+    org.springframework.web.servlet.mvc.method.annotation: TRACE # MVC注解日志级别
+  file:
+    name: logs/application.log # 日志文件路径
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n" # 控制台日志格式
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n" # 文件日志格式
+
+# 分页插件配置
+pagehelper:
+  helperDialect: mysql # 数据库方言
+  reasonable: true # 合理化参数
+  supportMethodsArguments: true # 支持通过方法参数来传递分页参数
+  params: count=countSql # 参数映射
+
+# 文件配置
+file:
+  frontend-project: vite-project # 前端项目目录
+  frontend-assets: src/assets/uploads # 上传文件存储路径
+  allowed-types: image/jpeg,image/png,image/gif # 允许的文件类型
